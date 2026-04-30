@@ -147,7 +147,7 @@ document.getElementById("mrJackpotBtn").addEventListener("click", () => {
   renderCards();
 });
 document.getElementById("joinBtn").onclick = () => {
-  window.open("https://discord.gg/HFdGPKnR", "_blank");
+  window.open("https://discord.gg/bu3M6kN9sx", "_blank");
 };
 /* =====================
    INIT
