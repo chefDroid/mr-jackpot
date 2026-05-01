@@ -108,11 +108,12 @@ if (!book) continue;
    const filteredGames = games.filter(g =>
   allowedSports.includes(g.sport_key)
 );
+  // 🚨 FALLBACK (CRITICAL)
+  const usableGames = filteredGames.length > 0 ? filteredGames : games;
   console.log("TOTAL GAMES:", games.length);
   console.log("FILTERED GAMES:", filteredGames.length);
   console.log("USABLE GAMES:", usableGames.length);
-// 🚨 FALLBACK (CRITICAL)
-const usableGames = filteredGames.length > 0 ? filteredGames : games;
+
 
   const todayGames = usableGames.filter(g => isToday(g.commence_time));
   const futureGames = usableGames.filter(g => !isToday(g.commence_time));
@@ -124,8 +125,8 @@ const usableGames = filteredGames.length > 0 ? filteredGames : games;
     todayPicks.length >= 3 ? todayPicks : futurePicks.slice(0, 10);
 
   const allPicks = [...todayPicks, ...futurePicks];
-  console.log("TOTAL GAMES:", games.length);
-   console.log("SPORT KEYS:", games.map(g => g.sport_key));
+  
+  console.log("SPORT KEYS:", games.map(g => g.sport_key));
   /* =====================
      MEDIAN TOTAL
   ===================== */
