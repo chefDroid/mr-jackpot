@@ -130,15 +130,46 @@ function showLock() {
 
   stack.innerHTML = `
     <div class="lock">
-      <h2>?? Unlock More Slips</h2>
-      <p>Enter your email to continue</p>
-      <input placeholder="Email" />
+      <h2>🔥 Unlock Full Access</h2>
+      <p>Enter your email</p>
+
+      <input id="emailInput" placeholder="Email" />
       <br/><br/>
-      <button>Unlock</button>
+
+      <button onclick="unlockVIP()">Unlock</button>
     </div>
   `;
 }
+async function unlockVIP() {
+  const email = document.getElementById("emailInput").value;
 
+  if (!email) return alert("Enter email");
+
+  try {
+    const res = await fetch("https://jackpot-api.kasgoatpro.workers.dev/unlock", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("🔥 VIP unlocked! Check your email.");
+
+      // redirect
+      window.location.href = "vip.html";
+    } else {
+      alert("Error unlocking");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Unlock failed");
+  }
+}
 /* =====================
    BUTTON ACTION
 ===================== */
