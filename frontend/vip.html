@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VIP Picks</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+  <h1>🔥 VIP PICKS</h1>
+
+  <div class="leagues">
+    <button onclick="loadLeague('nba')">NBA</button>
+    <button onclick="loadLeague('mlb')">MLB</button>
+    <button onclick="loadLeague('nhl')">NHL</button>
+  </div>
+
+  <div id="vipContent"></div>
+</div>
+
+<script>
+async function loadLeague(league) {
+  const res = await fetch("https://jackpot-api.kasgoatpro.workers.dev/picks?bankroll=100");
+  const data = await res.json();
+
+  const picks = data.slips?.[0]?.straights || [];
+
+  const filtered = picks;
+
+  document.getElementById("vipContent").innerHTML =
+    filtered.map(p => `
+      <div class="bet">
+        🔥 ${p.team} (${p.odds})
+        <br/>📏 ${p.spread ?? "N/A"}
+        <br/>📊 ${p.total ?? "N/A"}
+      </div>
+    `).join("");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+/* RESET */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: black;
+  color: white;
+}
+
+/* APP CONTAINER */
+.app {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+  padding-bottom: 100px;
+}
+
+/* HEADER */
+.header {
+  margin-top: 20px;
+}
+
+.header h1 {
+  color: gold;
+  font-size: 28px;
+  margin: 0;
+}
+
+.tagline {
+  color: #888;
+  font-size: 14px;
+}
+
+/* CARD STACK */
+#cardStack {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+/* CARD */
+.card {
+  background: linear-gradient(145deg, #0a0a0a, #000);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+}
+
+/* TITLES */
+.slip-title {
+  color: gold;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  margin-top: 15px;
+  color: #00ff99;
+  font-weight: bold;
+}
+
+/* BET BOX */
+.bet {
+  background: #111;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.team {
+  color: gold;
+  font-weight: bold;
+}
+
+.info {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.amount {
+  color: #00ff99;
+  font-weight: bold;
+}
+
+/* PARLAY */
+.parlay-leg {
+  border-left: 3px solid gold;
+}
+
+/* PAYOUT */
+.payout {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #00ff99;
+  font-weight: bold;
+}
+
+/* FLOATING BUTTON */
+#avatar-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+}
+
+#avatar-btn img {
+  width: 70px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  /* GLOW EFFECT 🔥 */
+  box-shadow: 0 0 20px gold;
+}
+
+/* CTA */
+.cta {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.cta a {
+  background: gold;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+}
