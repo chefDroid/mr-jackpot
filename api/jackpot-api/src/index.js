@@ -1,4 +1,4 @@
-import { getGames, generatePicks } from '../../../logic/picksEngine.js';
+import { getGames, generatePicks, getPlayerProps, buildPlayerProps } from '../../../logic/picksEngine.js';
 
 export default {
   async fetch(request, env) {
@@ -102,7 +102,78 @@ export default {
         });
       }
     }
+// =========================
+// PLAYER PROPS ENDPOINT
+// =========================
+if (url.pathname === "/props") {
 
+  const sport = url.searchParams.get("sport") || "basketball_nba";
+
+  try {
+
+    let markets = "";
+
+    // NBA
+    if (sport === "basketball_nba") {
+      markets =
+        "player_points,player_rebounds,player_assists";
+    }
+
+    // MLB
+    else if (sport === "baseball_mlb") {
+      markets =
+        "batter_home_runs,batter_hits,pitcher_strikeouts";
+    }
+
+    // NHL
+    else if (sport === "icehockey_nhl") {
+      markets =
+        "player_points,player_goals,player_assists";
+    }
+
+    // WNBA
+    else if (sport === "basketball_wnba") {
+      markets =
+        "player_points,player_rebounds,player_assists";
+    }
+
+    // Soccer
+    else if (sport.includes("soccer")) {
+      markets =
+        "player_goals,player_shots_on_target";
+    }
+
+    // UFC
+    else if (sport === "mma_mixed_martial_arts") {
+      markets =
+        "fight_winner";
+    }
+
+    const games = await getPlayerProps(
+      sport,
+      env.ODDS_API_KEY,
+      markets
+    );
+
+    const props = buildPlayerProps(games);
+
+    return new Response(
+      JSON.stringify({ props }),
+      {
+        headers: corsHeaders
+      }
+    );
+
+  } catch (err) {
+
+    return new Response(JSON.stringify({
+      error: err.message
+    }), {
+      status: 500,
+      headers: corsHeaders
+    });
+  }
+}
     // =========================
     // EMAIL UNLOCK
     // =========================

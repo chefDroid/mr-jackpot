@@ -10,29 +10,54 @@
   <h1>🔥 VIP PICKS</h1>
 
   <div class="leagues">
-    <button onclick="loadLeague('nba')">NBA</button>
-    <button onclick="loadLeague('mlb')">MLB</button>
-    <button onclick="loadLeague('nhl')">NHL</button>
-  </div>
+  <button onclick="loadLeague('basketball_nba')">NBA</button>
+  <button onclick="loadLeague('baseball_mlb')">MLB</button>
+  <button onclick="loadLeague('icehockey_nhl')">NHL</button>
+  <button onclick="loadLeague('basketball_wnba')">WNBA</button>
+  <button onclick="loadLeague('soccer_epl')">SOCCER</button>
+  <button onclick="loadLeague('mma_mixed_martial_arts')">UFC</button>
+</div>
 
   <div id="vipContent"></div>
 </div>
 
 <script>
-async function loadLeague(league) {
-  const res = await fetch("https://jackpot-api.kasgoatpro.workers.dev/picks?bankroll=100");
+async function loadLeague(sport) {
+
+  const res = await fetch(
+    `https://jackpot-api.kasgoatpro.workers.dev/props?sport=${sport}`
+  );
+
   const data = await res.json();
 
-  const picks = data.slips?.[0]?.straights || [];
-
-  const filtered = picks;
+  const props = data.props || [];
 
   document.getElementById("vipContent").innerHTML =
-    filtered.map(p => `
+    props.map(p => `
       <div class="bet">
-        🔥 ${p.team} (${p.odds})
-        <br/>📏 ${p.spread ?? "N/A"}
-        <br/>📊 ${p.total ?? "N/A"}
+
+        <h3>🔥 ${p.player}</h3>
+
+        <p>
+          ${p.pick}
+        </p>
+
+        <p>
+          📊 ${p.market}
+        </p>
+
+        <p>
+          💰 Odds: ${p.odds}
+        </p>
+
+        <p>
+          🎯 Confidence: ${p.confidence}%
+        </p>
+
+        <small>
+          ${p.game}
+        </small>
+
       </div>
     `).join("");
 }

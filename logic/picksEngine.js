@@ -36,7 +36,26 @@ export async function getGames(sportKey, apiKey) {
 
   return await res.json();
 }
+/* =====================
+   FETCH PLAYER PROPS
+===================== */
+export async function getPlayerProps(sportKey, apiKey, markets) {
 
+  const url =
+    `https://api.the-odds-api.com/v4/sports/${sportKey}/odds` +
+    `?regions=us` +
+    `&markets=${markets}` +
+    `&oddsFormat=american` +
+    `&apiKey=${apiKey}`;
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Failed props fetch for ${sportKey}`);
+  }
+
+  return await res.json();
+}
 /* =====================
    DATE FILTER
 ===================== */
