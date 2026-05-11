@@ -1,67 +1,378 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>VIP Picks</title>
+  <title>VIP Props</title>
+
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+
+    body {
+      margin: 0;
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .app {
+      padding: 20px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ff87;
+      margin-bottom: 25px;
+    }
+
+    /* =========================
+       SPORT BUTTONS
+    ========================= */
+
+    .leagues {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .leagues button {
+      background: #111;
+      color: white;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .leagues button:hover {
+      background: #00ff87;
+      color: black;
+    }
+
+    /* =========================
+       GRID
+    ========================= */
+
+    #vipContent {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* =========================
+       PROP CARD
+    ========================= */
+
+    .prop-card {
+      background: #111;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #1f1f1f;
+      transition: 0.2s;
+    }
+
+    .prop-card:hover {
+      transform: scale(1.02);
+      border-color: #00ff87;
+    }
+
+    .card-top {
+      background: linear-gradient(
+        135deg,
+        #00ff87,
+        #00b4ff
+      );
+
+      padding: 18px;
+      color: black;
+    }
+
+    .player-name {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .prop-type {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .pick-line {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .game {
+      color: #aaa;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .confidence {
+      color: #00ff87;
+      font-weight: bold;
+    }
+
+    /* =========================
+       BUILD SLIP BUTTON
+    ========================= */
+
+    .build-wrap {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .build-btn {
+      background: #00ff87;
+      color: black;
+      border: none;
+      padding: 14px 26px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .build-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    .loading {
+      text-align: center;
+      font-size: 22px;
+      padding: 60px;
+    }
+
+  </style>
 </head>
+
 <body>
 
 <div class="app">
-  <h1>🔥 VIP PICKS</h1>
+
+  <h1>🔥 VIP PLAYER PROPS</h1>
+
+  <!-- =========================
+       SPORT TABS
+  ========================= -->
 
   <div class="leagues">
-  <button onclick="loadLeague('basketball_nba')">NBA</button>
-  <button onclick="loadLeague('baseball_mlb')">MLB</button>
-  <button onclick="loadLeague('icehockey_nhl')">NHL</button>
-  <button onclick="loadLeague('basketball_wnba')">WNBA</button>
-  <button onclick="loadLeague('soccer_epl')">SOCCER</button>
-  <button onclick="loadLeague('mma_mixed_martial_arts')">UFC</button>
-</div>
+
+    <button onclick="loadLeague('basketball_nba')">
+      NBA
+    </button>
+
+    <button onclick="loadLeague('baseball_mlb')">
+      MLB
+    </button>
+
+    <button onclick="loadLeague('icehockey_nhl')">
+      NHL
+    </button>
+
+    <button onclick="loadLeague('basketball_wnba')">
+      WNBA
+    </button>
+
+    <button onclick="loadLeague('soccer_epl')">
+      SOCCER
+    </button>
+
+    <button onclick="loadLeague('mma_mixed_martial_arts')">
+      UFC
+    </button>
+
+  </div>
+
+  <!-- =========================
+       BUILD SLIP
+  ========================= -->
+
+  <div class="build-wrap">
+    <button class="build-btn" onclick="buildSlip()">
+      🔥 BUILD SMART SLIP
+    </button>
+  </div>
+
+  <!-- =========================
+       CONTENT
+  ========================= -->
 
   <div id="vipContent"></div>
+
 </div>
 
 <script>
-async function loadLeague(sport) {
 
-  const res = await fetch(
-    `https://jackpot-api.kasgoatpro.workers.dev/props?sport=${sport}`
-  );
+let currentProps = [];
 
-  const data = await res.json();
+async function loadLeague(league) {
 
-  const props = data.props || [];
+  const vip = document.getElementById("vipContent");
 
-  document.getElementById("vipContent").innerHTML =
-    props.map(p => `
-      <div class="bet">
+  vip.innerHTML = `
+    <div class="loading">
+      Loading Props...
+    </div>
+  `;
 
-        <h3>🔥 ${p.player}</h3>
+  try {
 
-        <p>
-          ${p.pick}
-        </p>
+    const res = await fetch(
+      `https://jackpot-api.kasgoatpro.workers.dev/props?sport=${league}`
+    );
 
-        <p>
-          📊 ${p.market}
-        </p>
+    const data = await res.json();
 
-        <p>
-          💰 Odds: ${p.odds}
-        </p>
+    const props = data.props || [];
 
-        <p>
-          🎯 Confidence: ${p.confidence}%
-        </p>
+    currentProps = props;
 
-        <small>
-          ${p.game}
-        </small>
+    if (!props.length) {
+
+      vip.innerHTML = `
+        <div class="loading">
+          No props found.
+        </div>
+      `;
+
+      return;
+    }
+
+    vip.innerHTML = props.map(p => {
+
+      const stat =
+        p.stat
+          ? p.stat
+              .replaceAll("_", " ")
+              .replace("player ", "")
+              .toUpperCase()
+          : "PROP";
+
+      return `
+
+      <div class="prop-card">
+
+        <div class="card-top">
+
+          <div class="player-name">
+            🔥 ${p.player}
+          </div>
+
+          <div class="prop-type">
+            ${stat}
+          </div>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="pick-line">
+            ${p.pick}
+          </div>
+
+          <div class="game">
+            🏟 ${p.game}
+          </div>
+
+          <div class="meta">
+            <span>
+              💰 ${p.odds}
+            </span>
+
+            <span class="confidence">
+              🎯 ${p.confidence}%
+            </span>
+          </div>
+
+        </div>
 
       </div>
-    `).join("");
+
+      `;
+
+    }).join("");
+
+  } catch (err) {
+
+    vip.innerHTML = `
+      <div class="loading">
+        Failed To Load Props
+      </div>
+    `;
+
+    console.log(err);
+  }
 }
+
+/* =========================
+   BUILD SLIP LOGIC
+========================= */
+
+function buildSlip() {
+
+  if (!currentProps.length) {
+    alert("No props loaded");
+    return;
+  }
+
+  // SORT BY CONFIDENCE
+  const sorted = [...currentProps]
+    .sort((a, b) => b.confidence - a.confidence);
+
+  // RANDOM 4-6 LEGS
+  const size =
+    Math.floor(Math.random() * 3) + 4;
+
+  const selected =
+    sorted.slice(0, size);
+
+  const slipText = selected.map(p => `
+${p.player}
+${p.pick}
+${p.stat}
+Odds: ${p.odds}
+`).join("\n");
+
+  alert(
+`🔥 SMART SLIP GENERATED 🔥
+
+${slipText}`
+  );
+}
+
+/* =========================
+   DEFAULT LOAD
+========================= */
+loadLeague("basketball_wnba")
+loadLeague("baseball_mlb")
+loadLeague("basketball_nba");
+
 </script>
 
 </body>
 </html>
+

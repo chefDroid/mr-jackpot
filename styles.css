@@ -127,3 +127,122 @@ body {
   text-decoration: none;
   font-weight: bold;
 }
+/* =========================
+   VIP PROP CARDS
+========================= */
+
+#vipContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 20px;
+}
+
+.prop-card {
+
+  background: #111;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  border: 1px solid #222;
+
+  transition: 0.2s;
+}
+
+.prop-card:hover {
+  transform: scale(1.02);
+  border-color: #00ff87;
+}
+
+.card-top {
+
+  background: linear-gradient(
+    135deg,
+    #00ff87,
+    #00b4ff
+  );
+
+  padding: 18px;
+
+  color: black;
+}
+
+.player-name {
+
+  font-size: 24px;
+
+  font-weight: bold;
+
+  margin-bottom: 8px;
+}
+
+.prop-type {
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.pick-line {
+
+  font-size: 32px;
+
+  font-weight: bold;
+
+  margin-bottom: 12px;
+}
+
+.game {
+
+  color: #999;
+
+  margin-bottom: 15px;
+
+  font-size: 14px;
+}
+
+.meta {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  font-size: 14px;
+}
+
+.confidence {
+
+  color: #00ff87;
+
+  font-weight: bold;
+}
+
+.build-btn {
+
+  background: #00ff87;
+
+  color: black;
+
+  border: none;
+
+  padding: 14px 26px;
+
+  border-radius: 14px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  margin-bottom: 25px;
+}
+
+.build-btn:hover {
+  opacity: 0.9;
+}

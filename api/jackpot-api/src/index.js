@@ -1,5 +1,16 @@
-import { getGames, generatePicks, getPlayerProps, buildPlayerProps } from '../../../logic/picksEngine.js';
+ import {
+  getGames,
+  generatePicks
+} from '../../../logic/picksEngine.js';
 
+import {
+  buildPlayerProps
+
+} from '../../../logic/propParser.js';
+
+import
+ { fetchAllSports
+} from './services/aggregator.js';
 export default {
   async fetch(request, env) {
 
@@ -41,6 +52,7 @@ export default {
       try {
         const sports = [
           "basketball_nba",
+          "basketball_wnba",
           "americanfootball_nfl",
           "baseball_mlb",
           "icehockey_nhl",
@@ -105,67 +117,44 @@ export default {
 // =========================
 // PLAYER PROPS ENDPOINT
 // =========================
+// =========================
+// NBA PLAYER PROPS
+// =========================
 if (url.pathname === "/props") {
 
-  const sport = url.searchParams.get("sport") || "basketball_nba";
+  const sport = url.searchParams.get("sport");
+
+  if (!sport) {
+    return new Response(JSON.stringify({
+      error: "Missing sport param"
+    }), { status: 400, headers: corsHeaders });
+  }
+
+  const cacheKey = new Request(request.url);
+  const cache = caches.default;
+
+  let response = await cache.match(cacheKey);
+  if (response) return response;
 
   try {
 
-    let markets = "";
+    const props = await fetchAllSports(env, sport);
 
-    // NBA
-    if (sport === "basketball_nba") {
-      markets =
-        "player_points,player_rebounds,player_assists";
-    }
+    const parsed = buildPlayerProps(props, sport);
 
-    // MLB
-    else if (sport === "baseball_mlb") {
-      markets =
-        "batter_home_runs,batter_hits,pitcher_strikeouts";
-    }
-
-    // NHL
-    else if (sport === "icehockey_nhl") {
-      markets =
-        "player_points,player_goals,player_assists";
-    }
-
-    // WNBA
-    else if (sport === "basketball_wnba") {
-      markets =
-        "player_points,player_rebounds,player_assists";
-    }
-
-    // Soccer
-    else if (sport.includes("soccer")) {
-      markets =
-        "player_goals,player_shots_on_target";
-    }
-
-    // UFC
-    else if (sport === "mma_mixed_martial_arts") {
-      markets =
-        "fight_winner";
-    }
-
-    const games = await getPlayerProps(
-      sport,
-      env.ODDS_API_KEY,
-      markets
-    );
-
-    const props = buildPlayerProps(games);
-
-    return new Response(
-      JSON.stringify({ props }),
-      {
-        headers: corsHeaders
+    response = new Response(JSON.stringify({
+      props: parsed
+    }), {
+      headers: {
+        ...corsHeaders,
+        "Cache-Control": "public, max-age=120"
       }
-    );
+    });
+
+    await cache.put(cacheKey, response.clone());
+    return response;
 
   } catch (err) {
-
     return new Response(JSON.stringify({
       error: err.message
     }), {
@@ -195,7 +184,7 @@ if (url.pathname === "/props") {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            from: "Mr Jackpot <onboarding@yourdomain.com>",
+            from: "Mr Jackpot <onboarding@https://chefdroid.github.io/mr-jackpot/>",
             to: email,
             subject: "🔥 Welcome to Mr Jackpot",
             html: `

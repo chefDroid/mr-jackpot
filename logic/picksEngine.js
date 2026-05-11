@@ -104,7 +104,58 @@ if (!book) continue;
 
   return picks.sort((a, b) => b.confidenceScore - a.confidenceScore);
 }
+/* =====================
+   BUILD PLAYER PROPS
+===================== */
 
+export function buildPlayerProps(games) {
+
+  const props = [];
+
+  for (const g of games) {
+
+    const book = g.bookmakers?.[0];
+    if (!book) continue;
+
+    for (const market of book.markets || []) {
+
+      for (const outcome of market.outcomes || []) {
+
+        if (!outcome.description) continue;
+
+        const confidence =
+          impliedProb(outcome.price) * 100;
+
+        props.push({
+          sport: g.sport_key,
+
+          game: `${g.home_team} vs ${g.away_team}`,
+
+          player: outcome.description,
+
+          pick:
+            outcome.name === "Over"
+              ? `OVER ${outcome.point}`
+              : `UNDER ${outcome.point}`,
+
+          market: market.key,
+
+          line: outcome.point,
+
+          odds: outcome.price,
+
+          confidence: confidence.toFixed(1),
+
+          commence_time: g.commence_time
+        });
+      }
+    }
+  }
+
+  return props
+    .sort((a, b) => b.confidence - a.confidence)
+    .slice(0, 50);
+}
 /* =====================
    GENERATE PICKS (MAIN ENGINE)
 ===================== */
